@@ -25,7 +25,7 @@
     zoomLocation.longitude = -21.89764;
 	
     // 2
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 2000.0, 2000.0);
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 3000.0, 3000.0);
     // 3
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];                
     // 4

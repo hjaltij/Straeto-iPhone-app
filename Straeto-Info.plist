@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
-	<string>${PRODUCT_NAME}</string>
+	<string>Strætó</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
@@ -26,5 +26,16 @@
 	<true/>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array/>
+	<key>CFBundleIconFiles</key>
+	<array>
+		<string>icon.png</string>
+		<string>icon@2x.png</string>
+		<string>icon~ipad.png</string>
+		<string>icon-small.png</string>
+		<string>icon-small@2x.png</string>
+		<string>icon-small~ipad.png</string>
+	</array>
 </dict>
 </plist>
