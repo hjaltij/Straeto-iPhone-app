@@ -15,4 +15,8 @@
 
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 
+- (void)fetchBusData;
+- (void)parseBusData:(NSString *)busDataString;
+
+
 @end
