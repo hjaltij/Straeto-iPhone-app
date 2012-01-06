@@ -16,6 +16,8 @@
     
     int _x, _y;
     
+    Boolean debug;
+    
     CLLocationCoordinate2D _coordinate;
     
     double a ,f ,lat1 ,lat2 ,latc ,lonc ,eps ,rho ,e, f2sin1, sint, pol1, dum, polc, peq, pol, lat, lon, fact;
@@ -23,6 +25,8 @@
 
 @property (copy) NSString *number;
 @property (copy) NSString *from_to;
+
+@property Boolean debug;
 
 @property int x;
 @property int y;

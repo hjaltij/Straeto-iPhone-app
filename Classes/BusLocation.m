@@ -13,7 +13,7 @@
 @synthesize number = _number;
 @synthesize from_to = _from_to;
 
-@synthesize x = _x, y = _y;
+@synthesize x = _x, y = _y, debug;
 
 - (id)initWithNumber:(NSString*)number fromTo:(NSString*)fromTo x:(int)x y:(int)y
 {
@@ -59,6 +59,16 @@
 
 - (CLLocationCoordinate2D)coordinate
 {
+
+    if (debug)
+    {
+//        NSLog()
+        
+        //        NSLog("%i", _x);
+        //        NSLog("y: %i", _y);
+    }
+    
+    
     
     dum = [self f2:(sin(lat1/rho))] - [self f2:(sin(lat2/rho))];
     sint = 2 * (log([self fx:lat1]) - log( [self fx:lat2])) / dum;
@@ -73,7 +83,8 @@
     
     double delta = 1.0;
     
-    eps = 0.00000000001;
+    eps = 0.00000000001;   
+
     
     while( delta > eps )
     {

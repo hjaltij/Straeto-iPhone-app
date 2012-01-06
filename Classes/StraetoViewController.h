@@ -11,6 +11,8 @@
 
 @interface StraetoViewController : UIViewController <MKMapViewDelegate> {
 	MKMapView *_mapView;
+    
+    Boolean debug;
 }
 
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;

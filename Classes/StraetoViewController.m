@@ -25,6 +25,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    debug = YES;
+    
     CLLocationCoordinate2D zoomLocation;
     zoomLocation.latitude = 64.133004;
     zoomLocation.longitude = -21.89764;
@@ -53,6 +55,8 @@
 //        NSLog(@"Response: %@", responseString);
         
         [self parseBusData:responseString];
+        
+        [self performSelector:@selector(fetchBusData) withObject:nil afterDelay:10.0];
     }];
     
     [request setFailedBlock:^{
@@ -61,13 +65,23 @@
     }];
     
     [request startAsynchronous];
+    
+    
 }
 
 - (void)parseBusData:(NSString *)busDataString
 {
+    NSLog(@"update");
+    
+    int annotationIndex = 0;
+    
     for (id<MKAnnotation> annotation in _mapView.annotations)
-        [_mapView removeAnnotation:annotation];
-
+    {
+        if ([annotation isKindOfClass:[BusLocation class]])
+            [_mapView removeAnnotation:annotation];
+    }
+    
+    
     NSDictionary * root = [busDataString JSONValue];
     
     NSArray *routes = [root objectForKey:@"routes"];
@@ -83,16 +97,79 @@
             NSNumber *y = [b objectForKey:@"Y"];
             
             NSString *from = [b objectForKey:@"FROMSTOP"];
-
             NSString *to = [b objectForKey:@"TOSTOP"];
             
             NSString* fromTo = [NSString stringWithFormat:@"%@ -> %@", from, to];
                         
-            BusLocation *annotation = [[BusLocation alloc] initWithNumber:nr fromTo:fromTo x:[x intValue]  y:[y intValue]];
-            [_mapView addAnnotation:annotation];
+            int annotationIndexToUpdate = -1;
             
-            [annotation release];
+            // find BusLocation annotation to update
+            if(annotationIndex < [_mapView.annotations count])
+            {
+                do
+                {
+                    id annotation = [_mapView.annotations objectAtIndex:annotationIndex];
+                    
+                    if ([annotation isKindOfClass:[BusLocation class]])
+                        annotationIndexToUpdate = annotationIndex;
+                        
+                    annotationIndex++;
+                    
+                } while (annotationIndexToUpdate == -1 && annotationIndex < [_mapView.annotations count]);
+                
+                
+            }
+            
+            //
+            if(annotationIndexToUpdate == -1)
+            {
+                // turn of update mode
+                annotationIndex = 1000000;
+                
+                NSLog(@"new bus");
+                
+                BusLocation *annotation = [[BusLocation alloc] initWithNumber:nr fromTo:fromTo x:[x intValue]  y:[y intValue]];
+                
+                if(debug)
+                {
+                    annotation.debug = YES;
+                    debug = NO;
+                    
+                    NSLog(@"debug");
+                }
+                
+                [_mapView addAnnotation:annotation];
+                
+                [annotation release];
+            }
+            
+            else
+            {
+                NSLog(@"update bus");
+                
+                BusLocation *annotation = [_mapView.annotations objectAtIndex:annotationIndexToUpdate];
+                
+                annotation.number = nr;
+                annotation.from_to = fromTo;
+                
+                annotation.x = [x intValue];
+                annotation.y = [y intValue];    
+            }
         }
+    }
+    
+    // remove excess bus annotations
+    while (annotationIndex < ([_mapView.annotations count]-1))
+    {
+        NSLog(@"does this run?");
+        
+        id annotationToRemove = [_mapView.annotations objectAtIndex:annotationIndex];
+        
+        if([annotationToRemove isKindOfClass:[BusLocation class]])
+            [_mapView removeAnnotation:annotationToRemove];
+        
+        else
+            annotationIndex++;
     }
 }
 
