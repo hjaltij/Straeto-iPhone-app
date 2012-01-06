@@ -23,23 +23,21 @@
     [super dealloc];
 }
 
-- (void)viewWillAppear:(BOOL)animated {  
-    // 1
+- (void)viewWillAppear:(BOOL)animated
+{
     CLLocationCoordinate2D zoomLocation;
     zoomLocation.latitude = 64.133004;
     zoomLocation.longitude = -21.89764;
 	
-    // 2
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 3000.0, 3000.0);
-    // 3
+
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];                
-    // 4
+
     [_mapView setRegion:adjustedRegion animated:YES];
     
     [self fetchBusData];
 }
 
-// Replace refreshTapped as follows
 - (void)fetchBusData
 {
     
@@ -52,7 +50,7 @@
    
     [request setCompletionBlock:^{        
         NSString *responseString = [request responseString];
-        NSLog(@"Response: %@", responseString);
+//        NSLog(@"Response: %@", responseString);
         
         [self parseBusData:responseString];
     }];
@@ -84,8 +82,7 @@
             NSNumber *x = [b objectForKey:@"X"];
             NSNumber *y = [b objectForKey:@"Y"];
             
-            NSString *from = @"Fellaskóli";
-//            NSString *from = [b objectForKey:@"FROMSTOP"];
+            NSString *from = [b objectForKey:@"FROMSTOP"];
 
             NSString *to = [b objectForKey:@"TOSTOP"];
             
@@ -134,14 +131,16 @@
 }
 */
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
 	
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
 	

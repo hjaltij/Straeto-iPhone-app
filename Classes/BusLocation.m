@@ -12,7 +12,6 @@
 
 @synthesize number = _number;
 @synthesize from_to = _from_to;
-//@synthesize coordinate = _coordinate;
 
 @synthesize x = _x, y = _y;
 
@@ -58,7 +57,8 @@
 - (double)f2:(double)p { return [self f1:p] - e * [self f1:(e * p)]; }
 - (double)f3:(double)p { return pol1*exp( ([self f2:(sin(p/rho))]- f2sin1)*sint/2); }
 
-- (CLLocationCoordinate2D)coordinate {
+- (CLLocationCoordinate2D)coordinate
+{
     
     dum = [self f2:(sin(lat1/rho))] - [self f2:(sin(lat2/rho))];
     sint = 2 * (log([self fx:lat1]) - log( [self fx:lat2])) / dum;
@@ -70,8 +70,6 @@
     lat = 90 - 2 * rho * atan( exp( log( pol / peq ) / sint ) );
     lon = 0.0;
     fact = rho * cos(lat / rho) / sint / pol;
-    
-    NSLog(@"fact %f", fact);
     
     double delta = 1.0;
     
@@ -88,11 +86,8 @@
     }
     
     lon = -(lonc + rho * atan( (500000 - _x) / (polc - _y) ) / sint);
-    
-//    lat = round(lat*10000.0)/10000.0;
-//    lon = round(lon*10000.0)/10000.0;
-    
-    NSLog(@"%f,%f", lat, lon);
+        
+//    NSLog(@"%f,%f", lat, lon);
     
     CLLocationCoordinate2D cords;
     cords.latitude = lat;
