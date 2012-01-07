@@ -60,6 +60,8 @@
 - (CLLocationCoordinate2D)coordinate
 {
 
+    //NSLog(@"Asking for coordinate");
+    
     if (debug)
     {
 //        NSLog()
