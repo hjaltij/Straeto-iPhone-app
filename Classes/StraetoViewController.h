@@ -9,13 +9,15 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
-@interface StraetoViewController : UIViewController <MKMapViewDelegate> {
+@interface StraetoViewController : UIViewController <MKMapViewDelegate>
+{
 	MKMapView *_mapView;
-    
-    Boolean debug;
+    BOOL debug;
+    NSMutableArray *pinsToDelete;
 }
 
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
+@property (readwrite, retain) NSMutableArray *pinsToDelete;
 
 - (void)fetchBusData;
 - (void)parseBusData:(NSString *)busDataString;
