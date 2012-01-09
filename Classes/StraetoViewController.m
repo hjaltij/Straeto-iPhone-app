@@ -12,7 +12,7 @@
 #import "SBJson.h"
 
 @interface StraetoViewController()
-- (NSArray*)findPinsToDelete;
+- (NSArray*)findAllPins;
 @end
 
 @implementation StraetoViewController
@@ -67,7 +67,7 @@
     [request startAsynchronous];
 }
 
-- (NSArray*)findPinsToDelete
+- (NSArray*)findAllPins
 {
     NSMutableArray *pins = [NSMutableArray array];
     
@@ -86,7 +86,7 @@
     
     NSArray *routes = [root objectForKey:@"routes"];
     
-    [self.pinsToDelete addObjectsFromArray:[self findPinsToDelete]];
+    [self.pinsToDelete addObjectsFromArray:[self findAllPins]];
     
     for(NSDictionary *r in routes)
     {

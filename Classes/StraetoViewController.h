@@ -22,5 +22,4 @@
 - (void)fetchBusData;
 - (void)parseBusData:(NSString *)busDataString;
 
-
 @end
