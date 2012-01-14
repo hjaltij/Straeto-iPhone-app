@@ -11,6 +11,14 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 
+#import <MessageUI/MessageUI.h>
+
+
+#import "IASKSpecifier.h"
+#import "IASKSettingsReader.h"
+
+
+
 @interface StraetoViewController()
 - (NSArray*)findAllPins;
 @end
@@ -18,6 +26,8 @@
 @implementation StraetoViewController
 @synthesize mapView = _mapView;
 @synthesize pinsToDelete;
+
+@synthesize appSettingsViewController;
 
 - (void)dealloc
 {
@@ -28,6 +38,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.title = @"Rauntímakort";
+    
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettings)] autorelease];
+    
     debug = YES;
     
     pinsToDelete = [[NSMutableArray alloc] init];
@@ -45,9 +59,47 @@
     [self fetchBusData];
 }
 
+- (IASKAppSettingsViewController*)appSettingsViewController
+{	
+    if (!appSettingsViewController)
+    {
+		appSettingsViewController = [[IASKAppSettingsViewController alloc] initWithNibName:@"IASKAppSettingsView" bundle:nil];
+        
+        appSettingsViewController.title = @"Leiðir";
+		appSettingsViewController.delegate = self;
+	}
+    
+	return appSettingsViewController;
+}
+
+- (void)loadSettings
+{    
+    NSLog(@"log log log");
+    
+    self.appSettingsViewController.showDoneButton = NO;
+	[self.navigationController pushViewController:self.appSettingsViewController animated:YES];
+    
+    
+//    SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
+//    
+//    [self.navigationController pushViewController:settingsViewController animated:YES];
+//    
+//    [SettingsViewController release];
+    
+}
+
+- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
+    [self dismissModalViewControllerAnimated:YES];
+    
+    NSLog(@"settingsViewControllerDidEnd");
+	
+	// your code here to reconfigure the app for changed settings
+}
+
+
 - (void)fetchBusData
 {
-    NSURL *url = [NSURL URLWithString:@"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=3"];
+    NSURL *url = [NSURL URLWithString:@"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=12"];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 

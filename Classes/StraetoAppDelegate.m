@@ -13,6 +13,7 @@
 
 @synthesize window;
 @synthesize viewController;
+@synthesize navigationController;
 
 
 #pragma mark -
@@ -23,7 +24,7 @@
     // Override point for customization after application launch.
 
 	// Set the view controller as the window's root view controller and display.
-    self.window.rootViewController = self.viewController;
+    self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
 
     return YES;
@@ -81,6 +82,7 @@
 - (void)dealloc {
     [viewController release];
     [window release];
+    [navigationController release];
     [super dealloc];
 }
 
