@@ -24,8 +24,11 @@
 @end
 
 @implementation StraetoViewController
+
 @synthesize mapView = _mapView;
 @synthesize pinsToDelete;
+
+@synthesize routesUrl;
 
 @synthesize appSettingsViewController;
 
@@ -36,13 +39,27 @@
     [super dealloc];
 }
 
+
+// wtf!
+- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+{
+    if ((self = [super initWithNibName:nibName bundle:nibBundle]))
+    {
+        NSLog(@"what!");
+    }
+    
+    return self;    
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = @"Rauntímakort";
     
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettings)] autorelease];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
     
     debug = YES;
+    
+    routes = [NSArray arrayWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"11", @"12", @"13", @"14", @"15", @"17", @"18", @"19", @"21", @"22", @"23", @"24", @"26", @"27", @"28", @"33", @"34", @"35",@"57", nil];
     
     pinsToDelete = [[NSMutableArray alloc] init];
     
@@ -56,7 +73,53 @@
 
     [_mapView setRegion:adjustedRegion animated:YES];
     
+    [self setUpUrlFromSettings];
+    
     [self fetchBusData];
+}
+     
+- (void)setUpUrlFromSettings
+{
+    NSLog(@"setUpUrlFromSettings");
+    
+    NSMutableArray *activeRoutes = [NSMutableArray array];
+    
+    // url for ","
+    NSString *splitter = @"%2C";
+
+    Boolean useDefaults = YES;
+    
+    for (NSString *r in routes)
+    {
+        NSString *settingName = [NSString stringWithFormat:@"route_%@", r];
+                
+        NSString *settingValue = [[NSUserDefaults standardUserDefaults] stringForKey:settingName];
+        
+        if ([settingValue isEqualToString:@"1"])
+        {
+            [activeRoutes addObject:r];
+            
+            useDefaults = NO;
+        }
+        
+        else if(useDefaults && [settingValue isEqualToString:@"0"])
+        {
+            useDefaults = NO;
+        }
+    }
+    
+    // default routes
+    if (useDefaults)
+    {
+        [activeRoutes addObject:@"1"];
+        [activeRoutes addObject:@"2"];
+        [activeRoutes addObject:@"3"];
+        [activeRoutes addObject:@"4"];
+        [activeRoutes addObject:@"5"];
+        [activeRoutes addObject:@"6"];
+    }
+    
+    self.routesUrl = [activeRoutes componentsJoinedByString:splitter];
 }
 
 - (IASKAppSettingsViewController*)appSettingsViewController
@@ -72,20 +135,10 @@
 	return appSettingsViewController;
 }
 
-- (void)loadSettings
+- (void)loadSettingsView
 {    
-    NSLog(@"log log log");
-    
     self.appSettingsViewController.showDoneButton = NO;
 	[self.navigationController pushViewController:self.appSettingsViewController animated:YES];
-    
-    
-//    SettingsViewController *settingsViewController = [[SettingsViewController alloc] initWithNibName:@"SettingsViewController" bundle:nil];
-//    
-//    [self.navigationController pushViewController:settingsViewController animated:YES];
-//    
-//    [SettingsViewController release];
-    
 }
 
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
@@ -99,7 +152,11 @@
 
 - (void)fetchBusData
 {
-    NSURL *url = [NSURL URLWithString:@"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=12"];
+    NSLog(@"%@", routesUrl);
+    
+    NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
+    
+    NSURL *url = [NSURL URLWithString:urlPath];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 

@@ -17,17 +17,26 @@
     BOOL debug;
     NSMutableArray *pinsToDelete;
     
+    NSArray *routes;
+    NSString *routesUrl;
+    
     IASKAppSettingsViewController *appSettingsViewController;
 }
 
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 @property (readwrite, retain) NSMutableArray *pinsToDelete;
 
+@property (readwrite, retain) NSString *routesUrl;
+
 @property (nonatomic, retain) IASKAppSettingsViewController *appSettingsViewController;
+
+- (void)setUpUrlFromSettings;
+
+- (NSArray*)findAllPins;
 
 - (void)fetchBusData;
 - (void)parseBusData:(NSString *)busDataString;
 
-- (void)loadSettings;
+- (void)loadSettingsView;
 
 @end
