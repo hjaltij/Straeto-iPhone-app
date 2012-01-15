@@ -395,6 +395,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Hjalti Jakobsson (C797H49BT9)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -402,6 +403,7 @@
 				GCC_PREFIX_HEADER = Straeto_Prefix.pch;
 				INFOPLIST_FILE = "Straeto-Info.plist";
 				PRODUCT_NAME = Straeto;
+				PROVISIONING_PROFILE = "6A0B17A2-90A6-46BE-B227-7605D13C0044";
 			};
 			name = Debug;
 		};
@@ -409,11 +411,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Hjalti Jakobsson (C797H49BT9)";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Straeto_Prefix.pch;
 				INFOPLIST_FILE = "Straeto-Info.plist";
 				PRODUCT_NAME = Straeto;
+				PROVISIONING_PROFILE = "6A0B17A2-90A6-46BE-B227-7605D13C0044";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

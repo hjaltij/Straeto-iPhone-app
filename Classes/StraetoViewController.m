@@ -47,7 +47,7 @@
 
 - (void)fetchBusData
 {
-    NSURL *url = [NSURL URLWithString:@"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=3"];
+    NSURL *url = [NSURL URLWithString:@"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=6%2C13"];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 
