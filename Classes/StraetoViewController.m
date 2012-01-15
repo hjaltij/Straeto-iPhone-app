@@ -11,13 +11,26 @@
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
 
+#import <MessageUI/MessageUI.h>
+
+
+#import "IASKSpecifier.h"
+#import "IASKSettingsReader.h"
+
+
+
 @interface StraetoViewController()
-- (NSArray*)findPinsToDelete;
+- (NSArray*)findAllPins;
 @end
 
 @implementation StraetoViewController
+
 @synthesize mapView = _mapView;
 @synthesize pinsToDelete;
+
+@synthesize routesUrl;
+
+@synthesize appSettingsViewController;
 
 - (void)dealloc
 {
@@ -26,9 +39,27 @@
     [super dealloc];
 }
 
+
+// wtf!
+- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+{
+    if ((self = [super initWithNibName:nibName bundle:nibBundle]))
+    {
+        NSLog(@"what!");
+    }
+    
+    return self;    
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.title = @"Rauntímakort";
+    
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
+    
     debug = YES;
+    
+    routes = [NSArray arrayWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"11", @"12", @"13", @"14", @"15", @"17", @"18", @"19", @"21", @"22", @"23", @"24", @"26", @"27", @"28", @"33", @"34", @"35",@"57", nil];
     
     pinsToDelete = [[NSMutableArray alloc] init];
     
@@ -42,12 +73,90 @@
 
     [_mapView setRegion:adjustedRegion animated:YES];
     
+    [self setUpUrlFromSettings];
+    
     [self fetchBusData];
 }
+     
+- (void)setUpUrlFromSettings
+{
+    NSLog(@"setUpUrlFromSettings");
+    
+    NSMutableArray *activeRoutes = [NSMutableArray array];
+    
+    // url for ","
+    NSString *splitter = @"%2C";
+
+    Boolean useDefaults = YES;
+    
+    for (NSString *r in routes)
+    {
+        NSString *settingName = [NSString stringWithFormat:@"route_%@", r];
+                
+        NSString *settingValue = [[NSUserDefaults standardUserDefaults] stringForKey:settingName];
+        
+        if ([settingValue isEqualToString:@"1"])
+        {
+            [activeRoutes addObject:r];
+            
+            useDefaults = NO;
+        }
+        
+        else if(useDefaults && [settingValue isEqualToString:@"0"])
+        {
+            useDefaults = NO;
+        }
+    }
+    
+    // default routes
+    if (useDefaults)
+    {
+        [activeRoutes addObject:@"1"];
+        [activeRoutes addObject:@"2"];
+        [activeRoutes addObject:@"3"];
+        [activeRoutes addObject:@"4"];
+        [activeRoutes addObject:@"5"];
+        [activeRoutes addObject:@"6"];
+    }
+    
+    self.routesUrl = [activeRoutes componentsJoinedByString:splitter];
+}
+
+- (IASKAppSettingsViewController*)appSettingsViewController
+{	
+    if (!appSettingsViewController)
+    {
+		appSettingsViewController = [[IASKAppSettingsViewController alloc] initWithNibName:@"IASKAppSettingsView" bundle:nil];
+        
+        appSettingsViewController.title = @"Leiðir";
+		appSettingsViewController.delegate = self;
+	}
+    
+	return appSettingsViewController;
+}
+
+- (void)loadSettingsView
+{    
+    self.appSettingsViewController.showDoneButton = NO;
+	[self.navigationController pushViewController:self.appSettingsViewController animated:YES];
+}
+
+- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
+    [self dismissModalViewControllerAnimated:YES];
+    
+    NSLog(@"settingsViewControllerDidEnd");
+	
+	// your code here to reconfigure the app for changed settings
+}
+
 
 - (void)fetchBusData
 {
-    NSURL *url = [NSURL URLWithString:@"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=6%2C13"];
+    NSLog(@"%@", routesUrl);
+    
+    NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
+    
+    NSURL *url = [NSURL URLWithString:urlPath];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 
@@ -67,7 +176,7 @@
     [request startAsynchronous];
 }
 
-- (NSArray*)findPinsToDelete
+- (NSArray*)findAllPins
 {
     NSMutableArray *pins = [NSMutableArray array];
     
@@ -86,7 +195,7 @@
     
     NSArray *routes = [root objectForKey:@"routes"];
     
-    [self.pinsToDelete addObjectsFromArray:[self findPinsToDelete]];
+    [self.pinsToDelete addObjectsFromArray:[self findAllPins]];
     
     for(NSDictionary *r in routes)
     {
