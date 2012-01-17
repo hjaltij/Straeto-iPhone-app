@@ -73,50 +73,28 @@
 
     [_mapView setRegion:adjustedRegion animated:YES];
     
-    [self setUpUrlFromSettings];
+    [self setUpRouteUrlFromSettings];
     
     [self fetchBusData];
 }
      
-- (void)setUpUrlFromSettings
+- (void)setUpRouteUrlFromSettings
 {
     NSLog(@"setUpUrlFromSettings");
     
     NSMutableArray *activeRoutes = [NSMutableArray array];
     
-    // url for ","
+    // url encodeing for ","
     NSString *splitter = @"%2C";
-
-    Boolean useDefaults = YES;
     
     for (NSString *r in routes)
     {
         NSString *settingName = [NSString stringWithFormat:@"route_%@", r];
-                
-        NSString *settingValue = [[NSUserDefaults standardUserDefaults] stringForKey:settingName];
         
-        if ([settingValue isEqualToString:@"1"])
-        {
+        BOOL settingValue = [[NSUserDefaults standardUserDefaults] boolForKey:settingName];
+        
+        if(settingValue)
             [activeRoutes addObject:r];
-            
-            useDefaults = NO;
-        }
-        
-        else if(useDefaults && [settingValue isEqualToString:@"0"])
-        {
-            useDefaults = NO;
-        }
-    }
-    
-    // default routes
-    if (useDefaults)
-    {
-        [activeRoutes addObject:@"1"];
-        [activeRoutes addObject:@"2"];
-        [activeRoutes addObject:@"3"];
-        [activeRoutes addObject:@"4"];
-        [activeRoutes addObject:@"5"];
-        [activeRoutes addObject:@"6"];
     }
     
     self.routesUrl = [activeRoutes componentsJoinedByString:splitter];
@@ -140,15 +118,6 @@
     self.appSettingsViewController.showDoneButton = NO;
 	[self.navigationController pushViewController:self.appSettingsViewController animated:YES];
 }
-
-- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
-    [self dismissModalViewControllerAnimated:YES];
-    
-    NSLog(@"settingsViewControllerDidEnd");
-	
-	// your code here to reconfigure the app for changed settings
-}
-
 
 - (void)fetchBusData
 {

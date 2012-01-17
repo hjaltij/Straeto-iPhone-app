@@ -30,7 +30,7 @@
 
 @property (nonatomic, retain) IASKAppSettingsViewController *appSettingsViewController;
 
-- (void)setUpUrlFromSettings;
+- (void)setUpRouteUrlFromSettings;
 
 - (NSArray*)findAllPins;
 
