@@ -17,6 +17,8 @@
 #import "IASKSpecifier.h"
 #import "IASKSettingsReader.h"
 
+#import "BusBadgeView.h"
+
 
 
 @interface StraetoViewController()
@@ -125,6 +127,8 @@
     
     NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
     
+//    urlPath = @"http://pronasty.com/straeto.json";
+    
     NSURL *url = [NSURL URLWithString:urlPath];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -162,11 +166,11 @@
 {   
     NSDictionary * root = [busDataString JSONValue];
     
-    NSArray *routes = [root objectForKey:@"routes"];
+    NSArray *routeList = [root objectForKey:@"routes"];
     
     [self.pinsToDelete addObjectsFromArray:[self findAllPins]];
     
-    for(NSDictionary *r in routes)
+    for(NSDictionary *r in routeList)
     {
         NSArray *busses = [r objectForKey:@"busses"];
         
@@ -196,6 +200,33 @@
         [pinsToDelete removeAllObjects];
     }
 }
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
+    static NSString *identifier = @"BusLocation";
+    
+    if ([annotation isKindOfClass:[BusLocation class]])
+    {
+        BusLocation *busAnnotation = annotation;
+        
+        BusBadgeView *annotationView = (BusBadgeView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        
+        if (annotationView == nil)
+            annotationView = [[BusBadgeView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+        else
+            annotationView.annotation = busAnnotation;
+
+        [annotationView setBadgeString:busAnnotation.number];
+                
+        annotationView.enabled = YES;
+        annotationView.canShowCallout = YES;
+        
+        return annotationView;
+    }
+    
+    return nil;
+}
+
 
 /*
 // The designated initializer. Override to perform setup that is required before the view is loaded.

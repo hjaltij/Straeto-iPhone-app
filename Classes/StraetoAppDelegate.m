@@ -135,6 +135,7 @@
     [viewController release];
     [window release];
     [navigationController release];
+ 
     [super dealloc];
 }
 

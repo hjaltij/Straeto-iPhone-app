@@ -44,13 +44,13 @@
 
 - (NSString *)title
 {
-    return _number;
-}
-
-- (NSString *)subtitle
-{
     return _from_to;
 }
+
+//- (NSString *)subtitle
+//{
+//    return _from_to;
+//}
 
 - (double)fx:(double)p { return a * cos(p/rho)/sqrt(1 - pow(e*sin(p/rho),2)); }
 - (double)f1:(double)p { return log( (1 - p)/(1 + p) ); }
