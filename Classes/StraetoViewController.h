@@ -20,7 +20,7 @@
     NSArray *routes;
     NSString *routesUrl;
     
-    BOOL firstTimeView;
+    BOOL shouldUpdateView;
     
     NSTimeInterval lastUpdate;
     
@@ -38,6 +38,7 @@
 
 - (NSArray*)findAllPins;
 
+- (void)busDataUpdater;
 - (void)fetchBusData;
 - (void)parseBusData:(NSString *)busDataString;
 

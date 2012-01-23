@@ -48,9 +48,7 @@
 {
     [super viewDidLoad];
     
-    routes = [NSArray arrayWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"11", @"12", @"13", @"14", @"15", @"17", @"18", @"19", @"21", @"22", @"23", @"24", @"26", @"27", @"28", @"33", @"34", @"35",@"57", nil];
-    
-    [routes retain];
+    routes = [[NSArray arrayWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"11", @"12", @"13", @"14", @"15", @"17", @"18", @"19", @"21", @"22", @"23", @"24", @"26", @"27", @"28", @"33", @"34", @"35",@"57", nil] retain];
     
     pinsToDelete = [[NSMutableArray alloc] init];
     
@@ -67,12 +65,19 @@
     self.title = @"Rauntímakort";
     
     self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
-
+    
+    shouldUpdateView = NO;
+    
+    [self busDataUpdater];
 }
 
 - (void)viewWillAppear:(BOOL)animated
-{    
+{
+    [super viewWillAppear:animated];
+    
     [self setUpRouteUrlFromSettings];
+    
+    shouldUpdateView = YES;
     
     [self fetchBusData];
 }
@@ -120,15 +125,14 @@
 
 - (void)busDataUpdater
 {
+    if(shouldUpdateView)
+        [self fetchBusData];
     
-    
-    
+    [self performSelector:@selector(busDataUpdater) withObject:nil afterDelay:kDataUpdateFrequency];
 }
 
 - (void)fetchBusData
 {
-    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
-    
     NSLog(@"%@", routesUrl);
     
     NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
@@ -141,10 +145,9 @@
 
     [request setDelegate:self];
    
-    [request setCompletionBlock:^{        
+    [request setCompletionBlock:^{
         NSString *responseString = [request responseString];        
         [self parseBusData:responseString];        
-        [self performSelector:@selector(fetchBusData) withObject:nil afterDelay:kDataUpdateFrequency];
     }];
     
     [request setFailedBlock:^{
