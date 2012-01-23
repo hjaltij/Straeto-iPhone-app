@@ -20,6 +20,10 @@
     NSArray *routes;
     NSString *routesUrl;
     
+    BOOL firstTimeView;
+    
+    NSTimeInterval lastUpdate;
+    
     IASKAppSettingsViewController *appSettingsViewController;
 }
 

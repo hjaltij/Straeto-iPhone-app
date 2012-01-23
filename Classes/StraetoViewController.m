@@ -19,7 +19,7 @@
 
 #import "BusBadgeView.h"
 
-
+#define kDataUpdateFrequency 10.0
 
 @interface StraetoViewController()
 - (NSArray*)findAllPins;
@@ -38,30 +38,19 @@
 {
     [pinsToDelete release];
     [_mapView release];
+    [routes release];
+    
+    
     [super dealloc];
 }
 
-
-// wtf!
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+- (void)viewDidLoad
 {
-    if ((self = [super initWithNibName:nibName bundle:nibBundle]))
-    {
-        NSLog(@"what!");
-    }
-    
-    return self;    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.title = @"Rauntímakort";
-    
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
-    
-    debug = YES;
+    [super viewDidLoad];
     
     routes = [NSArray arrayWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"11", @"12", @"13", @"14", @"15", @"17", @"18", @"19", @"21", @"22", @"23", @"24", @"26", @"27", @"28", @"33", @"34", @"35",@"57", nil];
+    
+    [routes retain];
     
     pinsToDelete = [[NSMutableArray alloc] init];
     
@@ -70,11 +59,19 @@
     zoomLocation.longitude = -21.89764;
 	
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 3000.0, 3000.0);
-
+    
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];                
-
+    
     [_mapView setRegion:adjustedRegion animated:YES];
     
+    self.title = @"Rauntímakort";
+    
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{    
     [self setUpRouteUrlFromSettings];
     
     [self fetchBusData];
@@ -121,8 +118,17 @@
 	[self.navigationController pushViewController:self.appSettingsViewController animated:YES];
 }
 
+- (void)busDataUpdater
+{
+    
+    
+    
+}
+
 - (void)fetchBusData
 {
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    
     NSLog(@"%@", routesUrl);
     
     NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
@@ -138,7 +144,7 @@
     [request setCompletionBlock:^{        
         NSString *responseString = [request responseString];        
         [self parseBusData:responseString];        
-        [self performSelector:@selector(fetchBusData) withObject:nil afterDelay:5.0];
+        [self performSelector:@selector(fetchBusData) withObject:nil afterDelay:kDataUpdateFrequency];
     }];
     
     [request setFailedBlock:^{
@@ -242,14 +248,6 @@
 /*
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
-}
-*/
-
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
 }
 */
 

@@ -61,6 +61,7 @@
 		
 		CGRect textRect = countRect;
 		textRect.origin.x = countRect.origin.x + ((countRect.size.width / 2.0) - countSize.width / 2.0);
+        
 		textRect.origin.y += 4.0;
 		
 		CGContextRef ctx = UIGraphicsGetCurrentContext();
