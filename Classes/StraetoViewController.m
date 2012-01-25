@@ -132,8 +132,6 @@
 
 - (void)fetchBusData
 {
-    NSLog(@"%@", routesUrl);
-    
     NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
     
 //    urlPath = @"http://pronasty.com/straeto.json";
