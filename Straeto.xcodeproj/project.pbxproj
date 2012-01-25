@@ -64,6 +64,7 @@
 		68DC738D14C20A62009E1A00 /* IASKPSToggleSwitchSpecifierViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68DC738714C20A62009E1A00 /* IASKPSToggleSwitchSpecifierViewCell.xib */; };
 		68DC738E14C20A62009E1A00 /* IASKSpecifierValuesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 68DC738814C20A62009E1A00 /* IASKSpecifierValuesView.xib */; };
 		68DC739014C20C13009E1A00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68DC738F14C20C13009E1A00 /* MessageUI.framework */; };
+		68DC73B414C757C9009E1A00 /* BusBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 68DC73B314C757C9009E1A00 /* BusBadgeView.m */; };
 		68FB1B0E14B56C6500468CC7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68FB1B0D14B56C6500468CC7 /* MapKit.framework */; };
 		68FE5D6214B5FE400024CCC7 /* icon-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 68FE5D5B14B5FE400024CCC7 /* icon-small.png */; };
 		68FE5D6314B5FE400024CCC7 /* icon-small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68FE5D5C14B5FE400024CCC7 /* icon-small@2x.png */; };
@@ -178,6 +179,8 @@
 		68DC738714C20A62009E1A00 /* IASKPSToggleSwitchSpecifierViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IASKPSToggleSwitchSpecifierViewCell.xib; path = InAppSettingsKit/Xibs/IASKPSToggleSwitchSpecifierViewCell.xib; sourceTree = "<group>"; };
 		68DC738814C20A62009E1A00 /* IASKSpecifierValuesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = IASKSpecifierValuesView.xib; path = InAppSettingsKit/Xibs/IASKSpecifierValuesView.xib; sourceTree = "<group>"; };
 		68DC738F14C20C13009E1A00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		68DC73B214C757C9009E1A00 /* BusBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BusBadgeView.h; sourceTree = "<group>"; };
+		68DC73B314C757C9009E1A00 /* BusBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BusBadgeView.m; sourceTree = "<group>"; };
 		68FB1B0D14B56C6500468CC7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		68FE5D5B14B5FE400024CCC7 /* icon-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small.png"; path = "Resources/icon-small.png"; sourceTree = "<group>"; };
 		68FE5D5C14B5FE400024CCC7 /* icon-small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-small@2x.png"; path = "Resources/icon-small@2x.png"; sourceTree = "<group>"; };
@@ -220,6 +223,8 @@
 				28D7ACF70DDB3853001CB0EB /* StraetoViewController.m */,
 				685D956B14B64C3C00C89ED9 /* BusLocation.h */,
 				685D956C14B64C3C00C89ED9 /* BusLocation.m */,
+				68DC73B214C757C9009E1A00 /* BusBadgeView.h */,
+				68DC73B314C757C9009E1A00 /* BusBadgeView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -547,6 +552,7 @@
 				68DC738014C20A55009E1A00 /* IASKSlider.m in Sources */,
 				68DC738114C20A55009E1A00 /* IASKSwitch.m in Sources */,
 				68DC738214C20A55009E1A00 /* IASKTextField.m in Sources */,
+				68DC73B414C757C9009E1A00 /* BusBadgeView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

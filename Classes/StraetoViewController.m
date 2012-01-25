@@ -17,7 +17,9 @@
 #import "IASKSpecifier.h"
 #import "IASKSettingsReader.h"
 
+#import "BusBadgeView.h"
 
+#define kDataUpdateFrequency 10.0
 
 @interface StraetoViewController()
 - (NSArray*)findAllPins;
@@ -36,30 +38,16 @@
 {
     [pinsToDelete release];
     [_mapView release];
+    [routes release];
+    
     [super dealloc];
 }
 
-
-// wtf!
-- (id)initWithNibName:(NSString *)nibName bundle:(NSBundle *)nibBundle
+- (void)viewDidLoad
 {
-    if ((self = [super initWithNibName:nibName bundle:nibBundle]))
-    {
-        NSLog(@"what!");
-    }
+    [super viewDidLoad];
     
-    return self;    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.title = @"Rauntímakort";
-    
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
-    
-    debug = YES;
-    
-    routes = [NSArray arrayWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"11", @"12", @"13", @"14", @"15", @"17", @"18", @"19", @"21", @"22", @"23", @"24", @"26", @"27", @"28", @"33", @"34", @"35",@"57", nil];
+    routes = [[NSArray arrayWithObjects:@"1", @"2", @"3", @"4", @"5", @"6", @"11", @"12", @"13", @"14", @"15", @"17", @"18", @"19", @"21", @"22", @"23", @"24", @"26", @"27", @"28", @"33", @"34", @"35",@"57", nil] retain];
     
     pinsToDelete = [[NSMutableArray alloc] init];
     
@@ -68,55 +56,48 @@
     zoomLocation.longitude = -21.89764;
 	
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 3000.0, 3000.0);
-
+    
     MKCoordinateRegion adjustedRegion = [_mapView regionThatFits:viewRegion];                
-
+    
     [_mapView setRegion:adjustedRegion animated:YES];
     
-    [self setUpUrlFromSettings];
+    self.title = @"Rauntímakort";
+    
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
+    
+    shouldUpdateView = NO;
+    
+    [self busDataUpdater];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUpRouteUrlFromSettings];
+    
+    shouldUpdateView = YES;
     
     [self fetchBusData];
 }
      
-- (void)setUpUrlFromSettings
+- (void)setUpRouteUrlFromSettings
 {
     NSLog(@"setUpUrlFromSettings");
     
     NSMutableArray *activeRoutes = [NSMutableArray array];
     
-    // url for ","
+    // url encodeing for ","
     NSString *splitter = @"%2C";
-
-    Boolean useDefaults = YES;
     
     for (NSString *r in routes)
     {
         NSString *settingName = [NSString stringWithFormat:@"route_%@", r];
-                
-        NSString *settingValue = [[NSUserDefaults standardUserDefaults] stringForKey:settingName];
         
-        if ([settingValue isEqualToString:@"1"])
-        {
+        BOOL settingValue = [[NSUserDefaults standardUserDefaults] boolForKey:settingName];
+        
+        if(settingValue)
             [activeRoutes addObject:r];
-            
-            useDefaults = NO;
-        }
-        
-        else if(useDefaults && [settingValue isEqualToString:@"0"])
-        {
-            useDefaults = NO;
-        }
-    }
-    
-    // default routes
-    if (useDefaults)
-    {
-        [activeRoutes addObject:@"1"];
-        [activeRoutes addObject:@"2"];
-        [activeRoutes addObject:@"3"];
-        [activeRoutes addObject:@"4"];
-        [activeRoutes addObject:@"5"];
-        [activeRoutes addObject:@"6"];
     }
     
     self.routesUrl = [activeRoutes componentsJoinedByString:splitter];
@@ -141,14 +122,13 @@
 	[self.navigationController pushViewController:self.appSettingsViewController animated:YES];
 }
 
-- (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
-    [self dismissModalViewControllerAnimated:YES];
+- (void)busDataUpdater
+{
+    if(shouldUpdateView)
+        [self fetchBusData];
     
-    NSLog(@"settingsViewControllerDidEnd");
-	
-	// your code here to reconfigure the app for changed settings
+    [self performSelector:@selector(busDataUpdater) withObject:nil afterDelay:kDataUpdateFrequency];
 }
-
 
 - (void)fetchBusData
 {
@@ -156,16 +136,17 @@
     
     NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
     
+//    urlPath = @"http://pronasty.com/straeto.json";
+    
     NSURL *url = [NSURL URLWithString:urlPath];
     
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 
     [request setDelegate:self];
    
-    [request setCompletionBlock:^{        
+    [request setCompletionBlock:^{
         NSString *responseString = [request responseString];        
         [self parseBusData:responseString];        
-        [self performSelector:@selector(fetchBusData) withObject:nil afterDelay:5.0];
     }];
     
     [request setFailedBlock:^{
@@ -193,11 +174,11 @@
 {   
     NSDictionary * root = [busDataString JSONValue];
     
-    NSArray *routes = [root objectForKey:@"routes"];
+    NSArray *routeList = [root objectForKey:@"routes"];
     
     [self.pinsToDelete addObjectsFromArray:[self findAllPins]];
     
-    for(NSDictionary *r in routes)
+    for(NSDictionary *r in routeList)
     {
         NSArray *busses = [r objectForKey:@"busses"];
         
@@ -228,39 +209,36 @@
     }
 }
 
-/*
-// The designated initializer. Override to perform setup that is required before the view is loaded.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
+    static NSString *identifier = @"BusLocation";
+    
+    if ([annotation isKindOfClass:[BusLocation class]])
+    {
+        BusLocation *busAnnotation = annotation;
+        
+        BusBadgeView *annotationView = (BusBadgeView *) [_mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        
+        if (annotationView == nil)
+            annotationView = [[BusBadgeView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+        else
+            annotationView.annotation = busAnnotation;
+
+        [annotationView setBadgeString:busAnnotation.number];
+                
+        annotationView.enabled = YES;
+        annotationView.canShowCallout = YES;
+        
+        return annotationView;
     }
-    return self;
+    
+    return nil;
 }
-*/
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
-*/
-
-
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-*/
-
-
-/*
-// Override to allow orientations other than the default portrait orientation.
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-*/
 
 - (void)didReceiveMemoryWarning
 {

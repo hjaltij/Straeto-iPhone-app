@@ -19,5 +19,7 @@
 @property (nonatomic, retain) IBOutlet StraetoViewController *viewController;
 @property (retain, nonatomic) IBOutlet UINavigationController *navigationController;
 
+- (void)registerDefaultsFromSettingsBundle;
+
 @end
 

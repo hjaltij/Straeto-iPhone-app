@@ -23,7 +23,7 @@
     double a ,f ,lat1 ,lat2 ,latc ,lonc ,eps ,rho ,e, f2sin1, sint, pol1, dum, polc, peq, pol, lat, lon, fact;
 }
 
-@property (copy) NSString *number;
+@property (copy, readwrite) NSString *number;
 @property (copy) NSString *from_to;
 
 @property Boolean debug;
@@ -33,7 +33,7 @@
 
 - (id)initWithNumber:(NSString*)number fromTo:(NSString*)fromTo x:(int)x y:(int)y;
 - (NSString *)title;
-- (NSString *)subtitle;
+//- (NSString *)subtitle;
 
 - (double)fx:(double)p;
 - (double)f1:(double)p;

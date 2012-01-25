@@ -20,6 +20,10 @@
     NSArray *routes;
     NSString *routesUrl;
     
+    BOOL shouldUpdateView;
+    
+    NSTimeInterval lastUpdate;
+    
     IASKAppSettingsViewController *appSettingsViewController;
 }
 
@@ -30,10 +34,11 @@
 
 @property (nonatomic, retain) IASKAppSettingsViewController *appSettingsViewController;
 
-- (void)setUpUrlFromSettings;
+- (void)setUpRouteUrlFromSettings;
 
 - (NSArray*)findAllPins;
 
+- (void)busDataUpdater;
 - (void)fetchBusData;
 - (void)parseBusData:(NSString *)busDataString;
 
