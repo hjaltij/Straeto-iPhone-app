@@ -73,6 +73,7 @@
 		68FE5D6614B5FE400024CCC7 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68FE5D5F14B5FE400024CCC7 /* icon@2x.png */; };
 		68FE5D6714B5FE400024CCC7 /* icon~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 68FE5D6014B5FE400024CCC7 /* icon~ipad.png */; };
 		68FE5D6814B5FE400024CCC7 /* icon~itunes.png in Resources */ = {isa = PBXBuildFile; fileRef = 68FE5D6114B5FE400024CCC7 /* icon~itunes.png */; };
+		C05EC89A14D055A2003203A5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C05EC89C14D055A2003203A5 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -190,6 +191,8 @@
 		68FE5D6014B5FE400024CCC7 /* icon~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon~ipad.png"; path = "Resources/icon~ipad.png"; sourceTree = "<group>"; };
 		68FE5D6114B5FE400024CCC7 /* icon~itunes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon~itunes.png"; path = "Resources/icon~itunes.png"; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Straeto-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Straeto-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		C05EC89614D05507003203A5 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		C05EC89B14D055A2003203A5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +228,7 @@
 				685D956C14B64C3C00C89ED9 /* BusLocation.m */,
 				68DC73B214C757C9009E1A00 /* BusBadgeView.h */,
 				68DC73B314C757C9009E1A00 /* BusBadgeView.m */,
+				C05EC89614D05507003203A5 /* Constants.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -267,6 +271,7 @@
 				2899E5210DE3E06400AC0155 /* StraetoViewController.xib */,
 				28AD733E0D9D9553002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* Straeto-Info.plist */,
+				C05EC89C14D055A2003203A5 /* Localizable.strings */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -502,6 +507,7 @@
 				68DC738C14C20A62009E1A00 /* IASKPSTextFieldSpecifierViewCell.xib in Resources */,
 				68DC738D14C20A62009E1A00 /* IASKPSToggleSwitchSpecifierViewCell.xib in Resources */,
 				68DC738E14C20A62009E1A00 /* IASKSpecifierValuesView.xib in Resources */,
+				C05EC89A14D055A2003203A5 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +563,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C05EC89C14D055A2003203A5 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C05EC89B14D055A2003203A5 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1D6058940D05DD3E006BFB54 /* Debug */ = {

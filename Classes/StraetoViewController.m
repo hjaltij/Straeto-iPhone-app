@@ -10,16 +10,11 @@
 #import "BusLocation.h"
 #import "ASIHTTPRequest.h"
 #import "SBJson.h"
-
 #import <MessageUI/MessageUI.h>
-
-
 #import "IASKSpecifier.h"
 #import "IASKSettingsReader.h"
-
 #import "BusBadgeView.h"
-
-#define kDataUpdateFrequency 10.0
+#import "Constants.h"
 
 @interface StraetoViewController()
 - (NSArray*)findAllPins;
@@ -52,8 +47,8 @@
     pinsToDelete = [[NSMutableArray alloc] init];
     
     CLLocationCoordinate2D zoomLocation;
-    zoomLocation.latitude = 64.133004;
-    zoomLocation.longitude = -21.89764;
+    zoomLocation.latitude = kZoomLocationLat;
+    zoomLocation.longitude = kZoomLocationLong;
 	
     MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(zoomLocation, 3000.0, 3000.0);
     
@@ -61,9 +56,9 @@
     
     [_mapView setRegion:adjustedRegion animated:YES];
     
-    self.title = @"Rauntímakort";
+    self.title = NSLocalizedString(@"RealTimeMap", @"Rauntímakort");
     
-    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"Leiðir" style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
+    self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Routes", @"Leiðir") style:UIBarButtonItemStylePlain target:self action:@selector(loadSettingsView)] autorelease];
     
     shouldUpdateView = NO;
     
@@ -109,7 +104,7 @@
     {
 		appSettingsViewController = [[IASKAppSettingsViewController alloc] initWithNibName:@"IASKAppSettingsView" bundle:nil];
         
-        appSettingsViewController.title = @"Leiðir";
+        appSettingsViewController.title = NSLocalizedString(@"Routes", @"Leiðir");
 		appSettingsViewController.delegate = self;
 	}
     
@@ -132,7 +127,7 @@
 
 - (void)fetchBusData
 {
-    NSString *urlPath = [NSString stringWithFormat:@"%@%@", @"http://www.straeto.is/bitar/bus/livemap/json.jsp?routes=", routesUrl];
+    NSString *urlPath = [NSString stringWithFormat:kStraetoRoutesAPIURL, routesUrl];
     
 //    urlPath = @"http://pronasty.com/straeto.json";
     
