@@ -191,7 +191,7 @@
             NSString *from = [b objectForKey:@"FROMSTOP"];
             NSString *to = [b objectForKey:@"TOSTOP"];
             
-            NSString* fromTo = [NSString stringWithFormat:@"%@ -> %@", from, to];
+            NSString* fromTo = [NSString stringWithFormat:@"%@ → %@", from, to];
             
             BusLocation *annotation = [[BusLocation alloc] initWithNumber:nr fromTo:fromTo x:[x intValue] y:[y intValue]];                
             [_mapView addAnnotation:annotation];                

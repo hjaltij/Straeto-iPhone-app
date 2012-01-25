@@ -68,6 +68,10 @@
 		CGContextSaveGState(ctx);
 		
 		[path fill];
+        
+        [[UIColor whiteColor] set];
+        
+        [path stroke];
 		
 		CGContextRestoreGState(ctx);
 		
